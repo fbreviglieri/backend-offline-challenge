@@ -1,0 +1,43 @@
+@using FlightPlanner.Web.Models
+@model FlightFormViewModel
+
+@{
+    ViewData["Title"] = "New Flight";
+}
+
+<h1>New Flight</h1>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="DepartureAirportId" class="form-label"></label>
+        <select asp-for="DepartureAirportId" asp-items="Model.AirportOptions" class="form-select">
+            <option value="">-- select departure airport --</option>
+        </select>
+        <span asp-validation-for="DepartureAirportId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DestinationAirportId" class="form-label"></label>
+        <select asp-for="DestinationAirportId" asp-items="Model.AirportOptions" class="form-select">
+            <option value="">-- select destination airport --</option>
+        </select>
+        <span asp-validation-for="DestinationAirportId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AircraftId" class="form-label"></label>
+        <select asp-for="AircraftId" asp-items="Model.AircraftOptions" class="form-select">
+            <option value="">-- select aircraft --</option>
+        </select>
+        <span asp-validation-for="AircraftId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-link">Cancel</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

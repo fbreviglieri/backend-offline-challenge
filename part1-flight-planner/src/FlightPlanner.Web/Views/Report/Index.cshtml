@@ -1,0 +1,52 @@
+@using FlightPlanner.Web.Models
+@model FlightReportViewModel
+
+@{
+    ViewData["Title"] = "Report";
+}
+
+<h1>Flight Report</h1>
+
+@if (!Model.Flights.Any())
+{
+    <p>No flights have been entered yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Departure</th>
+                <th>Destination</th>
+                <th>Aircraft</th>
+                <th>Distance (km)</th>
+                <th>Flight time (h)</th>
+                <th>Fuel (kg)</th>
+                <th>Created (UTC)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var flight in Model.Flights)
+            {
+                <tr>
+                    <td>@flight.DepartureAirport.IataCode</td>
+                    <td>@flight.DestinationAirport.IataCode</td>
+                    <td>@flight.Aircraft.Name</td>
+                    <td>@flight.DistanceKm.ToString("N0")</td>
+                    <td>@flight.EstimatedFlightTimeHours.ToString("N1")</td>
+                    <td>@flight.EstimatedFuelKg.ToString("N0")</td>
+                    <td>@flight.CreatedAtUtc.ToString("u")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-secondary fw-bold">
+                <td colspan="3">Totals (@Model.Flights.Count flight(s))</td>
+                <td>@Model.TotalDistanceKm.ToString("N0")</td>
+                <td>@Model.TotalFlightTimeHours.ToString("N1")</td>
+                <td>@Model.TotalFuelKg.ToString("N0")</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+}

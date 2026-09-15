@@ -1,0 +1,5 @@
+[
+  { "Name": "Cessna 172 (light single-engine)", "CruiseSpeedKmh": 226, "FuelBurnPerHourKg": 30, "TakeoffFuelKg": 2 },
+  { "Name": "Airbus A320 (narrow-body airliner)", "CruiseSpeedKmh": 830, "FuelBurnPerHourKg": 2500, "TakeoffFuelKg": 150 },
+  { "Name": "Boeing 777 (wide-body airliner)", "CruiseSpeedKmh": 900, "FuelBurnPerHourKg": 7500, "TakeoffFuelKg": 400 }
+]
