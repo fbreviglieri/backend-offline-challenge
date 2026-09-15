@@ -91,32 +91,29 @@ behavior is independently unit-testable.
 ## Alternative when you don't own the message types
 
 If `MessageA/B/C` are external/generated types you can't add an interface to (or the "handling"
-genuinely belongs outside the message, e.g. in a dispatcher/visitor), a C# switch expression on
-a sealed hierarchy is a reasonable middle ground — it still removes the manual `is`/`as`
-boilerplate and, critically, the compiler warns (`CS8509`, non-exhaustive switch) if a new
-subtype is added and not handled here, once the base type is `sealed`/closed:
+genuinely belongs outside the message, e.g. in a dispatcher/visitor), C# pattern matching on a
+sealed hierarchy is a reasonable middle ground — it still removes the manual `is`/`as`
+boilerplate. Written as a switch **expression** (rather than a switch statement) over a
+`sealed`/closed base type, the compiler emits warning `CS8509` if a case is missing, which a
+plain switch *statement* will not do — so prefer the expression form here specifically to get
+that exhaustiveness check:
 
 ```csharp
-switch (message)
+Action handle = message switch
 {
-    case MessageA a:
-        a.MyCustomMethodOnA();
-        break;
-    case MessageB b:
-        b.MyCustomMethodOnB();
-        b.SomeAdditionalMethodOnB();
-        break;
-    case MessageC c:
-        c.MyCustomMethodOnC();
-        break;
-    default:
-        throw new NotSupportedException($"Unhandled message type: {message.GetType()}");
-}
+    MessageA a => a.MyCustomMethodOnA,
+    MessageB b => () => { b.MyCustomMethodOnB(); b.SomeAdditionalMethodOnB(); },
+    MessageC c => c.MyCustomMethodOnC,
+    _ => throw new NotSupportedException($"Unhandled message type: {message.GetType()}"),
+};
+handle();
 ```
 
-The `default: throw` is the important part — it converts "silently do nothing for an unknown
-type" into a loud, immediate failure, which is far safer in production than the original code's
-silent fall-through.
+The `_ => throw` arm is the important part regardless of form — it converts "silently do nothing
+for an unknown type" into a loud, immediate failure, which is far safer in production than the
+original code's silent fall-through. The compiler warning is a bonus that only the expression
+form gives you; don't rely on it in place of the explicit throw, since a non-sealed hierarchy or
+a switch statement won't get it.
 
 **Preference**: polymorphism (`IMessage.Handle()`) is the stronger fix because it removes the
 dispatch problem entirely rather than just making its failure mode louder. Use the switch-based
