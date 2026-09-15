@@ -3,17 +3,9 @@ using FileReaderLibrary.Security;
 
 namespace FileReaderLibrary;
 
-/// <summary>
-/// Composes the right <see cref="IFileReader"/> chain for a requested file type plus
-/// cross-cutting concerns (encryption, role-based security). The encryption/role-security
-/// implementations are constructor-injected, so switching them (e.g. to a real encryption
-/// algorithm or a real role system) never requires changing this class or the decorators —
-/// only which implementation is passed in.
-///
-/// Composition order (innermost first): raw text read -> role-based gate -> decryption ->
-/// format-specific parsing. Role-security and decryption operate on the file's raw bytes, so
-/// they must run before a format parser (e.g. XML) attempts to interpret the content.
-/// </summary>
+// Composition order (innermost first): raw read -> role gate -> decryption -> format parsing.
+// Role-security and decryption must run before a format parser, since it needs already-decrypted
+// plaintext to parse.
 public class FileReaderFactory
 {
     private readonly IEncryptionStrategy _encryptionStrategy;

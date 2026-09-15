@@ -32,8 +32,7 @@ public class RoleSecuredFileReaderDecoratorTests
             File.WriteAllText(path, "content");
             var reader = new RoleSecuredFileReaderDecorator(new XmlFileReader(), new SimpleRoleAuthorizationService(), "user");
 
-            // "user" is only allowed .txt files (see SimpleRoleAuthorizationService); this is a
-            // temp file with no extension, so it must be denied for any non-admin role.
+            // Temp file has no extension, so any non-admin role is denied.
             Assert.Throws<UnauthorizedAccessException>(() => reader.Read(path));
         }
         finally

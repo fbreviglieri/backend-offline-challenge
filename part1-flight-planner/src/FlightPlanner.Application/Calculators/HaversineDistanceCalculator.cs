@@ -1,9 +1,5 @@
 namespace FlightPlanner.Application.Calculators;
 
-/// <summary>
-/// Computes great-circle distance using the haversine formula, treating the earth as a sphere
-/// of radius 6371 km. Accurate to within ~0.5% for typical flight-planning purposes.
-/// </summary>
 public class HaversineDistanceCalculator : IDistanceCalculator
 {
     private const double EarthRadiusKm = 6371.0;

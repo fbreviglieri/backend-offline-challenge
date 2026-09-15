@@ -2,11 +2,8 @@ using System.Text.Json;
 
 namespace FileReaderLibrary;
 
-/// <summary>
-/// Parses JSON from an inner <see cref="IFileReader"/>'s output (defaulting to
-/// <see cref="TextFileReader"/>), mirroring <see cref="XmlFileReader"/> so it can be composed
-/// after decryption/role-security decorators.
-/// </summary>
+// Parses an inner reader's output rather than the file path directly, so decryption/role-security
+// decorators can sit between this and the raw file.
 public class JsonFileReader : IFileReader
 {
     private readonly IFileReader _innerReader;

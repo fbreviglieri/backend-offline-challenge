@@ -1,11 +1,6 @@
 namespace FileReaderLibrary.Security;
 
-/// <summary>
-/// Simplistic in-memory stand-in for a real role-based security system: "admin" can read
-/// anything; other roles are limited to an allow-list of file extensions. Good enough to
-/// demonstrate the seam — swap this for a real implementation of
-/// <see cref="IRoleAuthorizationService"/> without touching any reader/decorator code.
-/// </summary>
+// "admin" reads anything; other roles are limited to an allow-list of file extensions.
 public class SimpleRoleAuthorizationService : IRoleAuthorizationService
 {
     private const string AdminRole = "admin";

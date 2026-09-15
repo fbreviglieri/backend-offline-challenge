@@ -2,12 +2,6 @@ using FileReaderLibrary.Encryption;
 
 namespace FileReaderLibrary;
 
-/// <summary>
-/// Wraps any <see cref="IFileReader"/> and decrypts what it reads using the injected
-/// <see cref="IEncryptionStrategy"/>. Works for any inner reader/format without modification —
-/// enabling encryption for a new file format is purely a matter of composing this decorator
-/// around that format's reader (see <see cref="FileReaderFactory"/>).
-/// </summary>
 public class EncryptedFileReaderDecorator : IFileReader
 {
     private readonly IFileReader _innerReader;

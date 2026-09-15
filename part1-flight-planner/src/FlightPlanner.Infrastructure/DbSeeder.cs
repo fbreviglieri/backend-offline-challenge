@@ -4,10 +4,6 @@ using Microsoft.Extensions.Logging;
 
 namespace FlightPlanner.Infrastructure;
 
-/// <summary>
-/// Seeds the airport and aircraft reference data from the static JSON files under SeedData/
-/// on first run. Kept deliberately simple/offline: no external API calls, no network dependency.
-/// </summary>
 public class DbSeeder
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };

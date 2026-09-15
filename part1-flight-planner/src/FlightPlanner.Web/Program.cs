@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var sqliteConnectionString = builder.Configuration.GetConnectionString("FlightPlannerDb")
@@ -18,7 +17,6 @@ builder.Services.AddScoped<IFlightService, FlightService>();
 
 var app = builder.Build();
 
-// Apply pending migrations and seed reference data (airports/aircraft) on startup.
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FlightPlannerDbContext>();
@@ -28,11 +26,9 @@ using (var scope = app.Services.CreateScope())
     await seeder.SeedAsync();
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
