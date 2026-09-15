@@ -4,4 +4,5 @@ public enum FileType
 {
     Text,
     Xml,
+    Json,
 }

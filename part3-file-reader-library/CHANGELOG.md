@@ -55,3 +55,11 @@ User story: "Enable the role based security reading feature also for TEXT files"
 Removed `FileReaderFactory`'s file-type restriction on `roleSecured` — `RoleSecuredFileReaderDecorator`
 already worked with any `IFileReader`, so this is a pure composition/config change, no new
 decorator or service classes.
+
+## v7 — Read a JSON file
+
+User story: "A user should be able to read JSON files"
+
+Added `JsonFileReader`, mirroring `XmlFileReader`'s shape (parses an inner reader's output,
+defaulting to `TextFileReader`). Wired into `FileReaderFactory`; encrypted/role-secured JSON are
+explicitly not yet supported (guarded with `NotSupportedException`) until v8/v9.

@@ -119,4 +119,34 @@ public class FileReaderFactoryTests
             File.Delete(path);
         }
     }
+
+    [Fact]
+    public void Create_Json_ReturnsParsedContent()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, """{"a":1}""");
+
+            var reader = _factory.Create(FileType.Json, encrypted: false, roleSecured: false);
+
+            Assert.Contains("\"a\"", reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Create_EncryptedJson_NotYetSupported_Throws()
+    {
+        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Json, encrypted: true, roleSecured: false));
+    }
+
+    [Fact]
+    public void Create_RoleSecuredJson_NotYetSupported_Throws()
+    {
+        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Json, encrypted: false, roleSecured: true, role: "admin"));
+    }
 }
