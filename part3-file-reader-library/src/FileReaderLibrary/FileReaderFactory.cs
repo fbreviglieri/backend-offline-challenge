@@ -9,6 +9,10 @@ namespace FileReaderLibrary;
 /// implementations are constructor-injected, so switching them (e.g. to a real encryption
 /// algorithm or a real role system) never requires changing this class or the decorators —
 /// only which implementation is passed in.
+///
+/// Composition order (innermost first): raw text read -> role-based gate -> decryption ->
+/// format-specific parsing. Role-security and decryption operate on the file's raw bytes, so
+/// they must run before a format parser (e.g. XML) attempts to interpret the content.
 /// </summary>
 public class FileReaderFactory
 {
@@ -23,25 +27,15 @@ public class FileReaderFactory
 
     public IFileReader Create(FileType fileType, bool encrypted, bool roleSecured, string? role = null)
     {
-        IFileReader reader = CreateBaseReader(fileType);
-
-        if (encrypted)
+        if (roleSecured && fileType != FileType.Xml)
         {
-            if (fileType != FileType.Text)
-            {
-                throw new NotSupportedException($"Encrypted reading is not yet supported for {fileType} files.");
-            }
-
-            reader = new EncryptedFileReaderDecorator(reader, _encryptionStrategy);
+            throw new NotSupportedException($"Role-based security is not yet supported for {fileType} files.");
         }
+
+        IFileReader reader = new TextFileReader();
 
         if (roleSecured)
         {
-            if (fileType != FileType.Xml)
-            {
-                throw new NotSupportedException($"Role-based security is not yet supported for {fileType} files.");
-            }
-
             if (string.IsNullOrWhiteSpace(role))
             {
                 throw new ArgumentException("A role must be provided when roleSecured is true.", nameof(role));
@@ -50,13 +44,16 @@ public class FileReaderFactory
             reader = new RoleSecuredFileReaderDecorator(reader, _roleAuthorizationService, role);
         }
 
-        return reader;
-    }
+        if (encrypted)
+        {
+            reader = new EncryptedFileReaderDecorator(reader, _encryptionStrategy);
+        }
 
-    private static IFileReader CreateBaseReader(FileType fileType) => fileType switch
-    {
-        FileType.Text => new TextFileReader(),
-        FileType.Xml => new XmlFileReader(),
-        _ => throw new NotSupportedException($"File type {fileType} is not supported."),
-    };
+        return fileType switch
+        {
+            FileType.Text => reader,
+            FileType.Xml => new XmlFileReader(reader),
+            _ => throw new NotSupportedException($"File type {fileType} is not supported."),
+        };
+    }
 }

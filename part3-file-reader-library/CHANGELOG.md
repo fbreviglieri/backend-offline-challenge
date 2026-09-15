@@ -36,3 +36,14 @@ allow-list: "admin" reads everything, other roles are limited by file extension)
 (`UnauthorizedAccessException`) if the role isn't authorized. Wired into `FileReaderFactory`
 for XML files. The authorization service is constructor-injected, so swapping in a real
 role-based security system never touches the decorator or factory code.
+
+## v5 — Read encrypted XML files
+
+User story: "Enable the encrypted reading feature also for XML files"
+
+`FileReaderFactory` now composes encryption for XML the same way it already did for TEXT — no
+new decorator or strategy classes. This did require reordering *when* format parsing happens
+relative to decryption: `XmlFileReader` now parses an inner `IFileReader`'s output (defaulting
+to `TextFileReader`) instead of loading the file path directly, so `EncryptedFileReaderDecorator`
+can decrypt the raw bytes *before* they're interpreted as XML (parsing still-encrypted bytes as
+XML would otherwise fail). `EncryptedFileReaderDecorator` itself is unchanged.

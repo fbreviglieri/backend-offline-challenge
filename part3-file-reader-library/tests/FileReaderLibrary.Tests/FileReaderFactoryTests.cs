@@ -28,9 +28,22 @@ public class FileReaderFactoryTests
     }
 
     [Fact]
-    public void Create_EncryptedXml_NotYetSupported_Throws()
+    public void Create_EncryptedXml_ReturnsDecryptedContent()
     {
-        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Xml, encrypted: true, roleSecured: false));
+        var path = Path.GetTempFileName();
+        try
+        {
+            var original = "<root><item>value</item></root>";
+            File.WriteAllText(path, new string(original.Reverse().ToArray()));
+
+            var reader = _factory.Create(FileType.Xml, encrypted: true, roleSecured: false);
+
+            Assert.Contains("<item>value</item>", reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     [Fact]
