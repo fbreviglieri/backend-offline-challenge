@@ -71,3 +71,11 @@ User story: "A user should be able to read encrypted JSON files"
 Removed `FileReaderFactory`'s encrypted-JSON restriction. `EncryptedFileReaderDecorator` and
 `JsonFileReader` (which already parses its *inner reader's* output, not the raw file directly)
 needed no changes — pure composition.
+
+## v9 — Read JSON files in a role-based security context
+
+User story: "A user should be able to read JSON files in role based security context"
+
+Removed `FileReaderFactory`'s role-secured-JSON restriction. `RoleSecuredFileReaderDecorator`
+needed no changes — pure composition, completing coverage of all three formats (TEXT, XML,
+JSON) across both cross-cutting concerns (encryption, role-based security).

@@ -158,8 +158,38 @@ public class FileReaderFactoryTests
     }
 
     [Fact]
-    public void Create_RoleSecuredJson_NotYetSupported_Throws()
+    public void Create_RoleSecuredJson_AdminCanRead()
     {
-        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Json, encrypted: false, roleSecured: true, role: "admin"));
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, """{"a":1}""");
+
+            var reader = _factory.Create(FileType.Json, encrypted: false, roleSecured: true, role: "admin");
+
+            Assert.Contains("\"a\"", reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Create_RoleSecuredJson_DisallowedRole_Throws()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, """{"a":1}""");
+
+            var reader = _factory.Create(FileType.Json, encrypted: false, roleSecured: true, role: "user");
+
+            Assert.Throws<UnauthorizedAccessException>(() => reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 }
