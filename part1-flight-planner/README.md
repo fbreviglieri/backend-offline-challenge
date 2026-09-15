@@ -32,6 +32,15 @@ Layered, dependency-injected, no business logic in controllers:
 - **Distance**: great-circle (haversine) distance between the two airports' GPS coordinates.
 - **Fuel formula**: `takeoffFuelKg + (distanceKm / cruiseSpeedKmh) * fuelBurnPerHourKg`.
 
+## Design
+
+The UI's palette and type scale are modeled on [cocus.com](https://www.cocus.com/en/) (dark
+navy `#2C2F3A` text/nav, orange-to-amber gradient `#FF961E → #FDB42E` accents on pill-shaped
+buttons, light-gray `#F2F2F2` surfaces). Their display typeface ("Peter") is a proprietary font,
+so Poppins/Roboto (Google Fonts) stand in as freely-licensable equivalents with a similar
+geometric-sans look. Everything else (Bootstrap 5 grid/forms/tables) is unchanged — only
+`wwwroot/css/site.css` and the `<head>`/footer of `Views/Shared/_Layout.cshtml` were themed.
+
 ## Running it
 
 ```bash

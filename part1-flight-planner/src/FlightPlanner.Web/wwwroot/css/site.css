@@ -1,5 +1,31 @@
+/* ==========================================================================
+   Flight Planner theme
+   Palette / type inspired by cocus.com (public brand colors + typography
+   scale sampled from their published stylesheet). Their custom display
+   typeface ("Peter") is proprietary, so Poppins/Roboto (Google Fonts) are
+   used as close, freely-licensable stand-ins for the same geometric-sans
+   look. See README "Design credit" note.
+   ========================================================================== */
+
+:root {
+  --color-primary: #2c2f3a;   /* dark navy — headings, body text */
+  --color-muted: #424d68;     /* secondary navy-gray */
+  --color-muted-2: #747b95;   /* tertiary muted text */
+  --color-surface: #f2f2f2;   /* light gray section background */
+  --color-white: #ffffff;
+  --color-accent: #ff961e;    /* brand orange */
+  --color-accent-2: #fdb42e;  /* brand amber (gradient partner) */
+  --color-accent-soft: #ffbc7d;
+
+  --font-heading: "Poppins", "Segoe UI", sans-serif;
+  --font-body: "Roboto", "Segoe UI", sans-serif;
+
+  --radius-pill: 35px;
+  --radius-card: 12px;
+}
+
 html {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 @media (min-width: 768px) {
@@ -8,15 +34,163 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 0;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 2.25rem;
+  margin-bottom: 1.25rem;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-primary);
+}
+
+/* ---- Navbar ---------------------------------------------------------- */
+
+.navbar {
+  background-color: var(--color-white) !important;
+  border-bottom: 1px solid var(--color-surface);
+  box-shadow: 0 2px 12px rgba(44, 47, 58, 0.06);
+}
+
+.navbar-brand {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--color-primary) !important;
+  letter-spacing: 0.02em;
+}
+
+.navbar .nav-link {
+  color: var(--color-primary) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-pill);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--color-accent) !important;
+  background-color: var(--color-surface);
+}
+
+/* ---- Buttons ---------------------------------------------------------- */
+
+.btn {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  padding: 0.55rem 1.5rem;
+  border: none;
+  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.btn-primary {
+  color: var(--color-white);
+  background-image: linear-gradient(120deg, var(--color-accent-2) 20%, var(--color-accent) 80%);
+  box-shadow: 0 4px 14px rgba(255, 150, 30, 0.35);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  color: var(--color-white);
+  background-image: linear-gradient(120deg, var(--color-accent) 20%, var(--color-accent-2) 80%);
+  filter: brightness(1.02);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-link {
+  color: var(--color-muted);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-select:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 150, 30, 0.25);
+}
+
+/* ---- Forms -------------------------------------------------------------- */
+
+.form-label {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border-color: #d7d9e0;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-accent);
+}
+
+/* ---- Tables --------------------------------------------------------- */
+
+.table {
+  --bs-table-striped-bg: #f8f8fa;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead th {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  background-color: var(--color-surface);
+  border-bottom: none;
+}
+
+.table tfoot td,
+.table .table-secondary {
+  --bs-table-bg: var(--color-surface);
+  color: var(--color-primary);
+}
+
+/* ---- Footer ----------------------------------------------------------- */
+
+.footer {
+  background-color: var(--color-primary);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 1.25rem 0;
+  border-top: none !important;
+  margin-top: 3rem;
+}
+
+.footer a {
+  color: var(--color-accent-soft);
 }
