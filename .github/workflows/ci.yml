@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        solution:
+          - part1-flight-planner/FlightPlanner.sln
+          - part3-file-reader-library/FileReaderLibrary.sln
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore ${{ matrix.solution }}
+
+      - name: Build
+        run: dotnet build ${{ matrix.solution }} --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test ${{ matrix.solution }} --no-build --configuration Release --verbosity normal
