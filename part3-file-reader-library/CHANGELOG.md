@@ -47,3 +47,11 @@ relative to decryption: `XmlFileReader` now parses an inner `IFileReader`'s outp
 to `TextFileReader`) instead of loading the file path directly, so `EncryptedFileReaderDecorator`
 can decrypt the raw bytes *before* they're interpreted as XML (parsing still-encrypted bytes as
 XML would otherwise fail). `EncryptedFileReaderDecorator` itself is unchanged.
+
+## v6 — Read TEXT files in a role-based security context
+
+User story: "Enable the role based security reading feature also for TEXT files"
+
+Removed `FileReaderFactory`'s file-type restriction on `roleSecured` — `RoleSecuredFileReaderDecorator`
+already worked with any `IFileReader`, so this is a pure composition/config change, no new
+decorator or service classes.

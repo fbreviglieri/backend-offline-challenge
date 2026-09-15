@@ -27,11 +27,6 @@ public class FileReaderFactory
 
     public IFileReader Create(FileType fileType, bool encrypted, bool roleSecured, string? role = null)
     {
-        if (roleSecured && fileType != FileType.Xml)
-        {
-            throw new NotSupportedException($"Role-based security is not yet supported for {fileType} files.");
-        }
-
         IFileReader reader = new TextFileReader();
 
         if (roleSecured)

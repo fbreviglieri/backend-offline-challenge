@@ -83,8 +83,40 @@ public class FileReaderFactoryTests
     }
 
     [Fact]
-    public void Create_RoleSecuredText_NotYetSupported_Throws()
+    public void Create_RoleSecuredText_AllowedRole_ReturnsContent()
     {
-        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Text, encrypted: false, roleSecured: true, role: "admin"));
+        var path = Path.Combine(Path.GetTempPath(), $"frl-test-{Guid.NewGuid():N}.txt");
+        try
+        {
+            File.WriteAllText(path, "hello");
+
+            // "user" is allowed to read .txt files (see SimpleRoleAuthorizationService).
+            var reader = _factory.Create(FileType.Text, encrypted: false, roleSecured: true, role: "user");
+
+            Assert.Equal("hello", reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Create_RoleSecuredText_DisallowedRole_Throws()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"frl-test-{Guid.NewGuid():N}.txt");
+        try
+        {
+            File.WriteAllText(path, "hello");
+
+            // "guest" has no entry in SimpleRoleAuthorizationService's allow-list at all.
+            var reader = _factory.Create(FileType.Text, encrypted: false, roleSecured: true, role: "guest");
+
+            Assert.Throws<UnauthorizedAccessException>(() => reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 }
