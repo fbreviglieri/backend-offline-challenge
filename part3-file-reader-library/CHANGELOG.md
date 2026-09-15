@@ -23,3 +23,16 @@ stand-in, per the user story) + `NoOpEncryptionStrategy`, and `EncryptedFileRead
 which wraps any `IFileReader` and decrypts what it reads. Introduced `FileReaderFactory` /
 `FileType`, wiring the decorator for TEXT files. The strategy is constructor-injected, so
 swapping the algorithm never touches the decorator or factory code.
+
+## v4 — Read XML files in a role-based security context
+
+User story: "A user should be able to read XML files in role based security context" (e.g.
+admin can read everything, other roles can only read a limited set; the actual role system is
+out of scope, but switching to a real one must be possible without changing code)
+
+Added `IRoleAuthorizationService` + `SimpleRoleAuthorizationService` (a simplistic in-memory
+allow-list: "admin" reads everything, other roles are limited by file extension), and
+`RoleSecuredFileReaderDecorator`, which wraps any `IFileReader` and denies the read
+(`UnauthorizedAccessException`) if the role isn't authorized. Wired into `FileReaderFactory`
+for XML files. The authorization service is constructor-injected, so swapping in a real
+role-based security system never touches the decorator or factory code.

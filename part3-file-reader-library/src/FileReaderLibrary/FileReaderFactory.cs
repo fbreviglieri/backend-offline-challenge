@@ -1,4 +1,5 @@
 using FileReaderLibrary.Encryption;
+using FileReaderLibrary.Security;
 
 namespace FileReaderLibrary;
 
@@ -12,13 +13,15 @@ namespace FileReaderLibrary;
 public class FileReaderFactory
 {
     private readonly IEncryptionStrategy _encryptionStrategy;
+    private readonly IRoleAuthorizationService _roleAuthorizationService;
 
-    public FileReaderFactory(IEncryptionStrategy encryptionStrategy)
+    public FileReaderFactory(IEncryptionStrategy encryptionStrategy, IRoleAuthorizationService roleAuthorizationService)
     {
         _encryptionStrategy = encryptionStrategy;
+        _roleAuthorizationService = roleAuthorizationService;
     }
 
-    public IFileReader Create(FileType fileType, bool encrypted)
+    public IFileReader Create(FileType fileType, bool encrypted, bool roleSecured, string? role = null)
     {
         IFileReader reader = CreateBaseReader(fileType);
 
@@ -30,6 +33,21 @@ public class FileReaderFactory
             }
 
             reader = new EncryptedFileReaderDecorator(reader, _encryptionStrategy);
+        }
+
+        if (roleSecured)
+        {
+            if (fileType != FileType.Xml)
+            {
+                throw new NotSupportedException($"Role-based security is not yet supported for {fileType} files.");
+            }
+
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                throw new ArgumentException("A role must be provided when roleSecured is true.", nameof(role));
+            }
+
+            reader = new RoleSecuredFileReaderDecorator(reader, _roleAuthorizationService, role);
         }
 
         return reader;
