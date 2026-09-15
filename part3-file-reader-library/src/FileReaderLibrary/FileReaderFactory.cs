@@ -27,11 +27,6 @@ public class FileReaderFactory
 
     public IFileReader Create(FileType fileType, bool encrypted, bool roleSecured, string? role = null)
     {
-        if (encrypted && fileType == FileType.Json)
-        {
-            throw new NotSupportedException("Encrypted reading is not yet supported for Json files.");
-        }
-
         if (roleSecured && fileType == FileType.Json)
         {
             throw new NotSupportedException("Role-based security is not yet supported for Json files.");

@@ -63,3 +63,11 @@ User story: "A user should be able to read JSON files"
 Added `JsonFileReader`, mirroring `XmlFileReader`'s shape (parses an inner reader's output,
 defaulting to `TextFileReader`). Wired into `FileReaderFactory`; encrypted/role-secured JSON are
 explicitly not yet supported (guarded with `NotSupportedException`) until v8/v9.
+
+## v8 — Read encrypted JSON files
+
+User story: "A user should be able to read encrypted JSON files"
+
+Removed `FileReaderFactory`'s encrypted-JSON restriction. `EncryptedFileReaderDecorator` and
+`JsonFileReader` (which already parses its *inner reader's* output, not the raw file directly)
+needed no changes — pure composition.

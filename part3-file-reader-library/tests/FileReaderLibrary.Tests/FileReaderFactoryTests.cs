@@ -139,9 +139,22 @@ public class FileReaderFactoryTests
     }
 
     [Fact]
-    public void Create_EncryptedJson_NotYetSupported_Throws()
+    public void Create_EncryptedJson_ReturnsDecryptedContent()
     {
-        Assert.Throws<NotSupportedException>(() => _factory.Create(FileType.Json, encrypted: true, roleSecured: false));
+        var path = Path.GetTempFileName();
+        try
+        {
+            var original = """{"a":1}""";
+            File.WriteAllText(path, new string(original.Reverse().ToArray()));
+
+            var reader = _factory.Create(FileType.Json, encrypted: true, roleSecured: false);
+
+            Assert.Contains("\"a\"", reader.Read(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     [Fact]
